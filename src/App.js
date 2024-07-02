@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import WineList from './components/WineList';
+import WineDetail from './components/WineDetail';
+import CreateReview from './components/CreateReview';
 import './App.css';
 
 function App() {
+  const [selectedWineId, setSelectedWineId] = useState(null);
+  const [wines, setWines] = useState([]);
+
+  const handleReviewAdded = (updatedWine) => {
+    setWines(wines.map(wine => wine._id === updatedWine._id ? updatedWine : wine));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <WineList wines={wines} onSelectWine={setSelectedWineId} />
+      {selectedWineId && (
+        <>
+          <WineDetail wineId={selectedWineId} />
+          <CreateReview wineId={selectedWineId} onReviewAdded={handleReviewAdded} />
+        </>
+      )}
     </div>
   );
 }
